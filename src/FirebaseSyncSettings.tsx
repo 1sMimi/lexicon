@@ -3,6 +3,8 @@ import { createUserWithEmailAndPassword, GithubAuthProvider, onAuthStateChanged,
 import { firebaseAuth, firebaseProvider } from './firebase-sync';
 import { syncNow } from './sync';
 
+const githubEnabled = import.meta.env.VITE_FIREBASE_GITHUB_ENABLED === 'true';
+
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : 'The request failed. Local data was retained.';
 }
@@ -47,7 +49,7 @@ export default function FirebaseSyncSettings() {
       <label className="field">Email<input type="email" required autoComplete="username" value={email} onChange={event=>setEmail(event.target.value)}/></label>
       <label className="field">Password<input type="password" required autoComplete={create?'new-password':'current-password'} value={password} onChange={event=>setPassword(event.target.value)}/></label>
       <div className="row"><button className="primary" disabled={busy}>{create?'Create email account':'Sign in with email'}</button><button type="button" disabled={busy} onClick={()=>setCreate(!create)}>{create?'Use an existing account':'Create an account'}</button></div>
-    </form><button className="button" disabled={busy} onClick={()=>void perform(async()=>{await signInWithPopup(firebaseAuth,new GithubAuthProvider());})}>Continue with GitHub</button></>:<>
+    </form>{githubEnabled && <button className="button" disabled={busy} onClick={()=>void perform(async()=>{await signInWithPopup(firebaseAuth,new GithubAuthProvider());})}>Continue with GitHub</button>}</>:<>
       <p>Signed in as {user.email??'your account'}</p>
       <div className="row">{verified?<button className="primary" disabled={busy} onClick={()=>void sync()}>Sync now</button>:<>
         <button disabled={busy||!user.email} onClick={()=>void perform(async()=>{await sendEmailVerification(user);setMessage('Verification email sent.');})}>Send verification email</button>

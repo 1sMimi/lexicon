@@ -25,9 +25,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test
-      - run: pnpm build
+      - run: node scripts/check-firestore-private.mjs && pnpm build
         env:
           VITE_FIREBASE_WEB_CONFIG: ${{ vars.FIREBASE_WEB_CONFIG }}
+          VITE_FIREBASE_GITHUB_ENABLED: ${{ vars.FIREBASE_GITHUB_ENABLED }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
