@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { readStudyMeaning, studyMeaningKey } from './study-meaning';
 import { db, saveNote, setStatus, setBookmark, addWordToBook } from './db';
 
 export const statuses = ['unassessed', 'known', 'unknown', 'learning', 'reviewing', 'mastered'] as const;
@@ -17,6 +18,16 @@ export default function WordDetail({ id, onClose }: { id: string; onClose: () =>
   const word = useLiveQuery(() => db.words.get(id), [id]);
   const state = useLiveQuery(() => db.user_word_states.get(id), [id]);
   const note = useLiveQuery(() => db.notes.get(id), [id]);
+  const savedMeaning = useLiveQuery(() => db.settings.get(studyMeaningKey(id)), [id]);
+  const [meaning, setMeaning] = useState<string | null>(null);
+  const studyMeaning = meaning ?? readStudyMeaning(savedMeaning?.value);
+  async function saveStudyMeaning() {
+    try {
+      await db.settings.put({id:studyMeaningKey(id),value:readStudyMeaning(studyMeaning)});
+      setMeaning(null);
+      setMessage(studyMeaning.trim() ? 'Study meaning saved.' : 'Default dictionary prompts restored.');
+    } catch { setMessage('Could not save the study meaning.'); }
+  }
   const books = useLiveQuery(() => db.wordbooks.toArray()) ?? [];
   const [bookId, setBookId] = useState('');
   const [text, setText] = useState('');
@@ -45,6 +56,9 @@ export default function WordDetail({ id, onClose }: { id: string; onClose: () =>
     <div className="row wrap"><a href={`https://www.oxfordlearnersdictionaries.com/definition/english/${query}`} target="_blank" rel="noreferrer">Oxford ↗</a><a href={`https://dictionary.cambridge.org/dictionary/english-chinese-simplified/${query}`} target="_blank" rel="noreferrer">Cambridge ↗</a></div>
     <hr /><label className="field">Vocabulary status<select aria-label="Vocabulary status" value={state?.status ?? 'unassessed'} onChange={event => void setStatus(id, event.target.value as typeof statuses[number]).catch(() => setMessage('Could not save status.'))}>{statuses.filter(status => status !== 'mastered').map(status => <option key={status} value={status}>{status}</option>)}{state?.status === 'mastered' && <option value="mastered">mastered</option>}</select></label><button className="button" onClick={() => void bookmark()}>{state?.bookmarked ? '★ Remove bookmark' : '☆ Bookmark word'}</button>
     <label className="field">Add to a collection<select value={bookId} onChange={event => setBookId(event.target.value)}><option value="">Select a personal wordbook</option>{books.filter(book => book.source.toLowerCase() === 'personal').map(book => <option key={book.id} value={book.id}>{book.name}</option>)}</select></label><button className="button" disabled={!bookId} onClick={() => void addWordToBook(bookId, id).then(() => setMessage('Added to your wordbook.')).catch(() => setMessage('Could not add this word.'))}>Add word</button>
+    <label className="field">Study meaning<textarea rows={2} maxLength={500} value={studyMeaning} onChange={event=>setMeaning(event.target.value)} placeholder="Enter the one meaning you want to practice"/></label>
+    <p className="muted">Study and review will use this as the clue. Save an empty field to restore the dictionary prompts.</p>
+    <button className="button" disabled={meaning===null} onClick={()=>void saveStudyMeaning()}>Save study meaning</button>
     <label className="field">Personal notes<textarea lang="zh" rows={7} value={text} placeholder="Definitions, examples, collocations, or a memory cue…" onChange={event => { dirtyRef.current = true; revision.current++; setDirty(true); setText(event.target.value); }} /></label><p className="muted" role="status">{message || 'Notes save automatically and belong to this word in every wordbook.'}</p>
   </aside></div>;
 }

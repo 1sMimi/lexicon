@@ -17,3 +17,5 @@
 - User prefers heavier type and Today wordbooks ordered High Frequency 3000, TOEFL, IELTS, GRE. Keep Quick Assessment easy to find above daily study actions.
 - A long-lived PWA can continue serving the previous app shell while a new worker waits. Lexicon now shows a user-confirmed update action and checks on foreground/reconnect; users of the preceding build may need to close every Lexicon client once.
 - User wants to skip obvious words by manually marking them Mastered in Study. The manual flag is word-level and distinct from FSRS evidence; it neither fabricates logs nor marks any individual sense separately.
+- Per-word Study meaning is a local, backup-included clue override for study and review. It does not change the word ID or FSRS card and is not a separate sense mastery record.
+- User prefers email and GitHub sign-in for cross-device sync and wants to avoid the manual Supabase workflow.

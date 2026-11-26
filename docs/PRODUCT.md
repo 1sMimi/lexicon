@@ -47,3 +47,6 @@ List the four built-in books from introductory to advanced: High Frequency 3000,
 
 ## Manual mastery
 New-word recognition offers Mark as mastered. It records a manual word-level status, skips the new word, and creates neither a recall card nor a review event. Preserve this distinction in Insights. The word status can be changed again in the dictionary entry. This option does not confer mastery on individual senses.
+
+## Focused meaning
+A dictionary entry can save one custom study clue. Study shows that clue during recognition and uses it for English spelling recall in both new study and reviews. The word keeps its existing FSRS card; the clue does not create independent sense scheduling. Clearing it restores the dictionary prompts. Verify learning and review use only the saved clue, and existing cards retain their identity.

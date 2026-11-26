@@ -51,3 +51,7 @@
 
 ## Manual mastery
 - New-word recognition can mark a word manually mastered and advance. The mark persists across reloads, is reversible in the dictionary, and is distinguished in Insights. It creates no FSRS card, review log, or study attempt. Chromium verified persistence and isolation across independent browser profiles; typecheck, 23 tests and production build passed. Sense-level scheduling remains outstanding.
+
+## Focused meaning and sign-in
+- Dictionary entries can save a personal study meaning. Recognition, delayed recall, and due reviews use that clue; existing word-level FSRS scheduling is unchanged. TypeScript, 23 tests, build and Chromium workflow passed.
+- User requests email and GitHub sign-in for cross-device sync without Supabase. Firebase Auth and a private per-user storage adapter require a user-owned Firebase project and account authorization; neither is live yet.
