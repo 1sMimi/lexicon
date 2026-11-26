@@ -24,3 +24,5 @@
 - Original PDF canvas, selectable text and most recent reading restored were verified in Chromium on the preceding baseline. Recheck these during final V4 browser acceptance.
 - V4 typecheck, 19 tests and production build pass. Pending browser acceptance for new session flows and fonts.
 - Outstanding: sense-level schema migration/cards/notes; quick assessment and extra learning plans; Reader layouts/search/stable annotations/bookmarks; keyboard shortcuts and gestures; bilingual UI; optional reminders; private file sync, synced session resume and real RLS/two-device verification; Pages publishing and installed-device validation.
+
+- Private origin `1sMimi/lexicon` created and `main` pushed. GitHub Pages API rejected this repository on its current plan (HTTP 422). CI remains enabled; deployment waits for Pages eligibility and explicit enablement.

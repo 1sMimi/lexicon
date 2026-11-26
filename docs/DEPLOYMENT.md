@@ -15,7 +15,7 @@ Complete the browser authorization yourself; do not send tokens/passwords to cha
 ## Publish
 After authentication, create the dedicated `lexicon` repository privately, push `main`, and enable Actions. Making it public requires explicit approval. GitHub Free Pages requires a public repository; paid plans can publish Pages from private repositories. Repository privacy does not automatically make a Pages website private.
 
-Use Settings → Pages → Source → GitHub Actions. The workflow installs locked dependencies, typechecks, tests, builds and deploys dist. Relative base and hash routing support /lexicon/ and custom domains. No secrets are required for the local-only app. Supabase is optional; see SYNC.md.
+Use Settings → Pages → Source → GitHub Actions. Then set the repository Actions variable `PAGES_DEPLOY_ENABLED` to `true` and rerun the workflow. The workflow installs locked dependencies, typechecks, tests, builds and deploys dist. Relative base and hash routing support /lexicon/ and custom domains. No secrets are required for the local-only app. Supabase is optional; see SYNC.md.
 
 ## Release verification
 Verify the actual HTTPS Pages URL and /lexicon/ subpath, reload each route, install PWA on target devices, download resources then test offline, test service worker updates, and transfer a backup before switching origins. localhost browser data does not automatically transfer to github.io.
