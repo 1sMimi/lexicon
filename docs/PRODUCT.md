@@ -41,3 +41,6 @@ P0: infrastructure/data/dictionary/study/review/notes/offline/backup. P1: reader
 
 ## V4 override
 [Final Product Update V4.0](PRODUCT-V4.md) overrides conflicting V2/V3 requirements. Keep unchanged requirements. The final session addendum replaces immediate new-word spelling with interleaved delayed recall. Default new-word quota is 30, including a configurable zero. New reading files are eligible for private cloud sync after sign-in and explicit first-use consent when that feature is implemented.
+
+## Today preferences
+List the four built-in books from introductory to advanced: High Frequency 3000, TOEFL, IELTS, GRE. Keep the GRE study tile as the default new-word shortcut. Put a clearly labeled Quick Assessment link above the study tiles; a familiar word is marked Known and omitted from first-time study. Keep Regular available while increasing the default typography weight.

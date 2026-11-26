@@ -33,7 +33,7 @@ export default function Assessment() {
     finally { setBusy(false); }
   }
   const current = batch?.[0];
-  return <section><h1>Quick assessment</h1><p className="muted">Mark familiar words to skip first-time study. You can leave and return any time.</p>
+  return <section><h1>Quick assessment</h1><p className="muted">Choose Know it to keep a word out of first-time study. Skip for now leaves it unassessed. You can return to this assessment any time.</p>
     <div className="row"><Link className="button" to="/">Back to Today</Link><button disabled={!book || busy} onClick={() => book && void db.settings.delete(`assessment-cursor:${book.id}`).catch(failure => setError(String(failure)))}>Revisit skipped words</button></div>
     <label className="field">Wordbook<select value={book?.id ?? ''} onChange={event => {const id = event.target.value; setSelected(id); setChecked([]); void db.settings.put({id:'assessment-book',value:id}).catch(failure => setError(String(failure)));}}>{books?.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
     {current ? <><h2 className="word-title">{current.id}</h2><div className="row"><button className="primary" disabled={busy} onClick={() => void mark([current.id], 'known')}>Know it</button><button disabled={busy} onClick={() => void mark([current.id], 'unknown')}>Don't know it</button><button disabled={busy} onClick={() => void mark([current.id])}>Skip for now</button></div>

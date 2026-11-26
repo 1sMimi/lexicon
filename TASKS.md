@@ -37,3 +37,11 @@
 - Optional in-app reminder with time/weekdays and same-day dismissal passed Chromium mobile verification. Background notifications remain outside implemented scope.
 - TypeScript, 22 tests and the production build pass. Static release ZIP includes font and dictionary licenses; verified ZIP integrity and direct-upload file constraints.
 - Full V2–V4 acceptance matrix is in outputs/ACCEPTANCE.md. Remote main was verified at 09eac4f after another Git transport timeout. GitHub Pages has not published. A serving account or a GitHub plan that supports private repository Pages is needed.
+
+## Public GitHub Pages release
+- User explicitly approved public repository visibility. GitHub now serves https://1smimi.github.io/lexicon/ via Actions run 45774260784 from commit aa5282d.
+- Git push succeeded using HTTP/1.1 with the GitHub CLI credential helper after earlier transport timeouts. The Pages deploy variable is enabled.
+- Chromium verified the live HTTPS subpath, latest reminder screen, registered service worker and an offline dictionary lookup. Native phone installation and cross-device cloud sync remain separate acceptance work.
+
+## Today readability and assessment
+- Raised default text weights using bundled font variants. Today lists High Frequency 3000, TOEFL, IELTS, then GRE and shows Quick Assessment before the study tiles. The assessment explains Known versus skipping a question. TypeScript, all 22 tests, and production build passed.
