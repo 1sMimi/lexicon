@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import MeaningSelection from './MeaningSelection';
 import { readStudyMeaning, studyMeaningKey } from './study-meaning';
 import { db, saveNote, setStatus, setBookmark, addWordToBook } from './db';
 
@@ -51,14 +52,15 @@ export default function WordDetail({ id, onClose }: { id: string; onClose: () =>
     <div className="row"><span className="section-label">DICTIONARY</span><button className="button" onClick={() => void close()} aria-label="Close dictionary">Close ×</button></div>
     <h2 className="word-title">{word?.word ?? id}</h2><p className="muted">{word?.phonetic ? `/${word.phonetic}/` : 'Phonetic unavailable'} · {word?.pos || 'Part of speech unavailable'}</p>
     <div className="row wrap"><select aria-label="Pronunciation accent" value={region} onChange={event => setRegion(event.target.value)}><option value="en-US">US</option><option value="en-GB">UK</option></select><button className="button" onClick={() => setMessage(pronounce(word?.word ?? id, region, rate) ? 'Synthetic speech · voice availability depends on your device' : 'Speech is unavailable on this device')}>Listen / repeat</button><label>Speed <input aria-label="Speech speed" type="range" min="0.5" max="1.3" step="0.05" value={rate} onChange={event => setRate(Number(event.target.value))} /></label></div>
-    <div className="definition" lang="zh">{word?.translation?.replaceAll('\\n', '\n') || 'No Chinese definition in the downloaded dictionary.'}</div><p className="reading-text">{word?.definition?.replaceAll('\\n', '\n') || 'English definition unavailable.'}</p>
+    {word ? <MeaningSelection word={word} onMessage={setMessage}/> : <div className="definition" lang="zh">No definition in the downloaded dictionary.</div>}
+    {word?.translation && <p className="reading-text">{word.definition?.replaceAll('\\n', '\n') || 'English definition unavailable.'}</p>}
     {word?.exchange && <p className="muted">Word forms: {word.exchange}</p>}
     <div className="row wrap"><a href={`https://www.oxfordlearnersdictionaries.com/definition/english/${query}`} target="_blank" rel="noreferrer">Oxford ↗</a><a href={`https://dictionary.cambridge.org/dictionary/english-chinese-simplified/${query}`} target="_blank" rel="noreferrer">Cambridge ↗</a></div>
     <hr /><label className="field">Vocabulary status<select aria-label="Vocabulary status" value={state?.status ?? 'unassessed'} onChange={event => void setStatus(id, event.target.value as typeof statuses[number]).catch(() => setMessage('Could not save status.'))}>{statuses.filter(status => status !== 'mastered').map(status => <option key={status} value={status}>{status}</option>)}{state?.status === 'mastered' && <option value="mastered">mastered</option>}</select></label><button className="button" onClick={() => void bookmark()}>{state?.bookmarked ? '★ Remove bookmark' : '☆ Bookmark word'}</button>
     <label className="field">Add to a collection<select value={bookId} onChange={event => setBookId(event.target.value)}><option value="">Select a personal wordbook</option>{books.filter(book => book.source.toLowerCase() === 'personal').map(book => <option key={book.id} value={book.id}>{book.name}</option>)}</select></label><button className="button" disabled={!bookId} onClick={() => void addWordToBook(bookId, id).then(() => setMessage('Added to your wordbook.')).catch(() => setMessage('Could not add this word.'))}>Add word</button>
-    <label className="field">Study meaning<textarea rows={2} maxLength={500} value={studyMeaning} onChange={event=>setMeaning(event.target.value)} placeholder="Enter the one meaning you want to practice"/></label>
+    <details className="panel"><summary>Custom study clue</summary><label className="field">Study meaning<textarea rows={2} maxLength={500} value={studyMeaning} onChange={event=>setMeaning(event.target.value)} placeholder="Enter the one meaning you want to practice"/></label>
     <p className="muted">Study and review will use this as the clue. Save an empty field to restore the dictionary prompts.</p>
-    <button className="button" disabled={meaning===null} onClick={()=>void saveStudyMeaning()}>Save study meaning</button>
+    <button className="button" disabled={meaning===null} onClick={()=>void saveStudyMeaning()}>Save study meaning</button></details>
     <label className="field">Personal notes<textarea lang="zh" rows={7} value={text} placeholder="Definitions, examples, collocations, or a memory cue…" onChange={event => { dirtyRef.current = true; revision.current++; setDirty(true); setText(event.target.value); }} /></label><p className="muted" role="status">{message || 'Notes save automatically and belong to this word in every wordbook.'}</p>
   </aside></div>;
 }

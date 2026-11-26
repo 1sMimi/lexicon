@@ -58,3 +58,6 @@
 
 ## Firebase hosted sign-in readiness
 - Added optional Firebase email/password and GitHub sign-in, a Firestore sync provider and per-user access rules. Verified typecheck, 24 tests, both production builds and Chromium guest/settings rendering with and without test Web App configuration. Project `lexicon-2dcaa` exists per user. Dashboard control timed out; real providers, public Web App config, rules, and two-device account verification remain pending.
+
+## Meaning selection and mobile typography
+- Added reversible per-gloss exclusion with tap, double-click and hold-drag. Filtered prompts preserve the existing word-level FSRS record and keep one meaning active. Bundled Zhuque Fangsong with OFL notice for Chinese content on mobile. TypeScript, 25 tests, production build and Chromium gesture/font loading passed.

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useSearchParams, Link } from 'react-router-dom';
 import { db, reviewWord, setStatus, setBookmark } from './db';
-import { readStudyMeaning, studyMeaningKey } from './study-meaning';
+import { dictionaryMeanings, excludedMeanings, excludedMeaningsKey, readStudyMeaning, studyClue, studyMeaningKey } from './study-meaning';
 import { pronounce } from './WordDetail';
 import { deferRecall, emptyDraft, finishTask, nextRecall, type StudyDraft } from './study-session';
 
@@ -33,7 +33,7 @@ function StudySession({bookId, reviewOnly}: {bookId: string | null; reviewOnly: 
   const recall = !reviewOnly && !due.length ? nextRecall({...draft, pending: available}, Boolean(introduction)) : undefined;
   const word = due[0] ?? (recall ? candidates.find(item => item.id === recall.id) : introduction);
   const isReview = Boolean(word && cards.has(word.id));
-  const studyMeaning = readStudyMeaning(word && data?.settings.find(setting=>setting.id===studyMeaningKey(word.id))?.value);
+  const studyMeaning = word ? studyClue(dictionaryMeanings(word.translation, word.definition), excludedMeanings(data?.settings.find(setting=>setting.id===excludedMeaningsKey(word.id))?.value), readStudyMeaning(data?.settings.find(setting=>setting.id===studyMeaningKey(word.id))?.value)) : '';
   const interval = Number(data?.settings.find(setting => setting.id === 'recallInterval')?.value ?? 4);
   const alwaysShowNotes = Boolean(data?.settings.find(setting => setting.id === 'alwaysShowNotes')?.value);
   const note = useLiveQuery(() => word ? db.notes.get(word.id) : undefined, [word?.id]);

@@ -50,3 +50,6 @@ New-word recognition offers Mark as mastered. It records a manual word-level sta
 
 ## Focused meaning
 A dictionary entry can save one custom study clue. Study shows that clue during recognition and uses it for English spelling recall in both new study and reviews. The word keeps its existing FSRS card; the clue does not create independent sense scheduling. Clearing it restores the dictionary prompts. Verify learning and review use only the saved clue, and existing cards retain their identity.
+
+## Exclude individual dictionary meanings
+The word detail shows source definition fragments as selectable items. Tap or double-click an item to toggle its inclusion. Holding and dragging across the meaning selector can change several items together. Excluded items remain struck through in the dictionary and are not shown in recognition, recall clues, or review feedback. Keep at least one item active. Use filtered spelling prompts rather than ambiguous whole-word meaning questions when exclusions exist. Preserve existing custom prompts and FSRS records. Chinese definitions and notes prefer the bundled FangSong on mobile, with the license shipped alongside it.
