@@ -25,10 +25,17 @@ export const db = new Dexie('lexicon') as Dexie & {
 db.version(1).stores({words:'id,word,frequency,*tags',wordbooks:'id',user_word_states:'id,status,updatedAt',notes:'id,updatedAt',fsrs_cards:'id,card.dueAt',review_logs:'id,wordId,reviewedAt',documents:'id,updatedAt',document_chapters:'id,documentId',reading_positions:'id',word_occurrences:'id,wordId,documentId',vocabulary_tests:'id,testDate',settings:'id',sync_outbox:'id,updatedAt',word_senses:'id,wordId',wordbook_memberships:'id,wordbookId,wordId'});
 export const normalizeWord=(word:string)=>word.trim().normalize('NFC').toLowerCase();
 const enqueue=(table:string,recordId:string)=>db.sync_outbox.put({id:crypto.randomUUID(),table,recordId,updatedAt:Date.now()});
-export async function setStatus(id:string,status:WordStatus) {
- id=normalizeWord(id);
- await db.transaction('rw',[db.user_word_states,db.sync_outbox],async()=>{const old=await db.user_word_states.get(id);await db.user_word_states.put({id,status,bookmarked:old?.bookmarked??false,updatedAt:Date.now(),...(status==='mastered'?{masterySource:'manual' as const}:{})});await enqueue('user_word_states',id);});
+export async function setWordStatuses(ids: string[], status: WordStatus) {
+ const words=[...new Set(ids.map(normalizeWord).filter(Boolean))];
+ if (!words.length) return;
+ await db.transaction('rw', [db.user_word_states,db.sync_outbox], async () => {
+  const old=await db.user_word_states.bulkGet(words);
+  const now=Date.now();
+  await db.user_word_states.bulkPut(words.map((id,index)=>({id,status,bookmarked:old[index]?.bookmarked??false,updatedAt:now,...(status==='mastered'?{masterySource:'manual' as const}:{})})));
+  await db.sync_outbox.bulkPut(words.map(recordId=>({id:crypto.randomUUID(),table:'user_word_states',recordId,updatedAt:now})));
+ });
 }
+export function setStatus(id:string,status:WordStatus) { return setWordStatuses([id],status); }
 export async function setBookmark(id:string,bookmarked:boolean) {
  id=normalizeWord(id);
  await db.transaction('rw',[db.user_word_states,db.sync_outbox],async()=>{const old=await db.user_word_states.get(id);await db.user_word_states.put({...old,id,status:old?.status??'unassessed',bookmarked,updatedAt:Date.now()});await enqueue('user_word_states',id);});
@@ -53,10 +60,11 @@ export async function reviewWord(id:string,rating:1|2|3|4,questionType:string,co
  });
 }
 export async function initData() {
- if(await db.settings.get('coreResourceVersion'))return;
- const response=await fetch(`${import.meta.env.BASE_URL}data/core.json`);if(!response.ok)throw new Error('Dictionary resource unavailable. Please retry online.');
- const data=await response.json() as {words:Word[];wordbooks:Wordbook[]};
- await db.transaction('rw',[db.words,db.wordbooks,db.wordbook_memberships,db.settings],async()=>{await db.words.bulkPut(data.words);await db.wordbooks.bulkPut(data.wordbooks);await db.wordbook_memberships.bulkPut(data.wordbooks.flatMap(book=>book.wordIds.map(wordId=>({id:`${book.id}:${wordId}`,wordbookId:book.id,wordId}))));await db.settings.put({id:'coreResourceVersion',value:1});});
+ if((await db.settings.get('coreResourceVersion'))?.value===2)return;
+ const response=await fetch(`${import.meta.env.BASE_URL}data/core-v2.json`);if(!response.ok)throw new Error('Dictionary resource unavailable. Please retry online.');
+ const data=await response.json() as {version:number;words:Word[];wordbooks:Wordbook[]};
+ if(data.version!==2)throw new Error('Dictionary update unavailable.');
+ await db.transaction('rw',[db.words,db.wordbooks,db.wordbook_memberships,db.settings],async()=>{await db.words.bulkPut(data.words);await db.wordbooks.bulkPut(data.wordbooks);await db.wordbook_memberships.bulkPut(data.wordbooks.flatMap(book=>book.wordIds.map(wordId=>({id:`${book.id}:${wordId}`,wordbookId:book.id,wordId}))));await db.settings.put({id:'coreResourceVersion',value:2});});
 }
 export async function exportBackup() {
  const tables:Record<string,object[]>={};

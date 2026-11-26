@@ -21,3 +21,5 @@
 - User prefers email and GitHub sign-in for cross-device sync and wants to avoid the manual Supabase workflow.
 - User created Firebase project `lexicon-2dcaa`. Hosted auth is gated on the public `FIREBASE_WEB_CONFIG` Actions variable. Deploy Firestore rules and enable providers before activation. GitHub OAuth secret is entered directly in Firebase; never in the repository or chat.
 - Bundled Zhuque Fangsong v0.212 via the OFL webfont package for Chinese content on mobile; English headings and UI retain their existing fonts. Selectable dictionary gloss exclusions take precedence over the saved custom clue until restored, without changing FSRS identities.
+- Firebase Web App registration confirmed and Email/Password enabled. Firestore, rules, authorized web domain and GitHub OAuth remain pending. Leave the Pages Firebase config variable unset until the backend permissions are validated.
+- User replaced Quick Assessment with batch manual mastery in actual wordbook lists. Today uses one selected book, default High Frequency 3000; catalog includes ECDICT CET-4 and CET-6. Existing FSRS histories survive a manual mastery mark.

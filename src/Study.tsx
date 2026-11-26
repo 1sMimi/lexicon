@@ -24,10 +24,10 @@ function StudySession({bookId, reviewOnly}: {bookId: string | null; reviewOnly: 
   const members = bookId ? new Set(data?.books.find(book => book.id === bookId)?.wordIds ?? []) : null;
   const cards = new Map(data?.cards.map(card => [card.id, card])); const states = new Map(data?.states.map(state => [state.id, state]));
   const candidates = data?.words.filter(word => (!members || members.has(word.id)) && !completed.includes(word.id)) ?? [];
-  const due = candidates.filter(word => { const card = cards.get(word.id); return card && new Date(card.card.dueAt).getTime() <= Date.now(); }).sort((a, b) => new Date(cards.get(a.id)!.card.dueAt).getTime() - new Date(cards.get(b.id)!.card.dueAt).getTime());
+  const due = candidates.filter(word => { const card = cards.get(word.id); return card && states.get(word.id)?.masterySource !== 'manual' && new Date(card.card.dueAt).getTime() <= Date.now(); }).sort((a, b) => new Date(cards.get(a.id)!.card.dueAt).getTime() - new Date(cards.get(b.id)!.card.dueAt).getTime());
   const fresh = candidates.filter(word => !cards.has(word.id) && !['known', 'mastered'].includes(states.get(word.id)?.status ?? '') && Boolean(word.translation || word.definition) && !draft.pending.some(task => task.id === word.id));
   const today = new Date(); today.setHours(0, 0, 0, 0); const firstReviews = new Map<string, number>(); for (const log of data?.logs ?? []) firstReviews.set(log.wordId, Math.min(firstReviews.get(log.wordId) ?? Infinity, log.reviewedAt)); const learnedToday = [...firstReviews.values()].filter(time => time >= +today).length; const dailyLimit = Number(data?.settings.find(setting => setting.id === 'dailyNew')?.value ?? 30);
-  const available = draft.pending.filter(task => !cards.has(task.id) && candidates.some(word => word.id === task.id));
+  const available = draft.pending.filter(task => !['known','mastered'].includes(states.get(task.id)?.status ?? '') && !cards.has(task.id) && candidates.some(word => word.id === task.id));
   const remaining = Math.max(0, dailyLimit - learnedToday - available.length);
   const introduction = !reviewOnly && remaining > 0 ? fresh[0] : undefined;
   const recall = !reviewOnly && !due.length ? nextRecall({...draft, pending: available}, Boolean(introduction)) : undefined;

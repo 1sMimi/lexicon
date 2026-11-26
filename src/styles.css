@@ -7,7 +7,6 @@
 :root[data-weight=bold]{--ui-weight:700;--reading-weight:700}
 h1,h2,h3,.word-title,.vocabulary-word,.brand{font-weight:var(--heading-weight)}
 h1 em{font-weight:var(--heading-weight)}
-.assessment-entry{margin:0 0 1.25rem}
 .reader-text,.reading-text{font-weight:var(--reading-weight)}
 button,.button{font-weight:var(--button-weight)}
 .meaning-selection{margin:1.25rem 0}

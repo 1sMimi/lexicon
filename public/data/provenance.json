@@ -6,11 +6,13 @@
   "selection": "Lowercase ASCII lexical entries; High Frequency uses positive BNC rank; exam lists use exact source tags.",
   "counts": {
     "High Frequency 3000": 3000,
-    "GRE": 7504,
+    "CET-4": 3846,
+    "CET-6": 5406,
     "TOEFL": 6970,
-    "IELTS": 5038
+    "IELTS": 5038,
+    "GRE": 7504
   },
-  "coreWords": 13916,
+  "coreWords": 14787,
   "packs": [
     {
       "file": "dictionary-a.json",

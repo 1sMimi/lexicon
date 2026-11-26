@@ -15,7 +15,9 @@ export default function Insights() {
   const books = useLiveQuery(() => db.wordbooks.toArray(),[]) ?? [];
   const logs = useLiveQuery(() => db.review_logs.toArray(),[]) ?? [];
   const states = useLiveQuery(() => db.user_word_states.toArray(),[]) ?? [];
-  const cards = useLiveQuery(() => db.fsrs_cards.toArray(),[]) ?? [];
+  const storedCards = useLiveQuery(() => db.fsrs_cards.toArray(),[]) ?? [];
+  const manual = new Set(states.filter(state=>state.masterySource==='manual').map(state=>state.id));
+  const cards = storedCards.filter(card=>!manual.has(card.id));
   const tests = useLiveQuery(() => db.vocabulary_tests.toArray(),[]) ?? [];
   const [range,setRange] = useState('all'); const [editing,setEditing] = useState(''); const [date,setDate] = useState(localDay(Date.now()));
   const [size,setSize] = useState(''); const [source,setSource] = useState('Test Your Vocabulary'); const [url,setURL] = useState(testURL); const [notes,setNotes] = useState(''); const [screenshot,setScreenshot] = useState<string|undefined>(); const [message,setMessage] = useState('');

@@ -61,3 +61,11 @@
 
 ## Meaning selection and mobile typography
 - Added reversible per-gloss exclusion with tap, double-click and hold-drag. Filtered prompts preserve the existing word-level FSRS record and keep one meaning active. Bundled Zhuque Fangsong with OFL notice for Chinese content on mobile. TypeScript, 25 tests, production build and Chromium gesture/font loading passed.
+
+## Firebase console and live typography verification
+- User registered the Firebase Web App for `lexicon-2dcaa`. Enabled Email/Password in Firebase Authentication and verified the provider state. The Firestore console connection timed out; database rules, authorized domain, GitHub OAuth and live two-device verification are pending. Hosted sync remains off.
+- Retried Git push successfully. The Pages deployment of `af4bf65` completed, and the official URL passed mobile FangSong and meaning exclusion checks.
+
+## Single current wordbook and bulk mastery
+- Today shows one current book and links to All wordbooks. Six built-ins include ECDICT CET-4 (3,846) and CET-6 (5,406). Private imports remain available. Quick Assessment entry retired. Bulk mastery writes shared status but does not delete FSRS history or generate new events. TypeScript, 26 tests, production build and mobile Chromium flow passed.
+- User created the default Firestore database in production mode. Console connection timed out before publishing per-user rules. A copy of the reviewed rules is in outputs/lexicon-firestore.rules. Hosted sign-in remains off until rules, authorized domain and real verification are complete.
