@@ -4,7 +4,7 @@ import { DefaultScheduler } from 'ts-fsrs';
 export type WordStatus = 'unassessed'|'known'|'unknown'|'learning'|'reviewing'|'mastered';
 export interface Word { id:string; word:string; phonetic:string; translation:string; definition:string; pos:string; exchange:string; frequency:number; tags:string[] }
 export interface Wordbook { id:string; name:string; wordIds:string[]; source:string; updatedAt?:number }
-export interface UserState { id:string; status:WordStatus; bookmarked:boolean; updatedAt:number }
+export interface UserState { id:string; status:WordStatus; bookmarked:boolean; updatedAt:number; masterySource?:'manual' }
 export interface Note { id:string; text:string; updatedAt:number }
 type Scheduler = Awaited<ReturnType<typeof DefaultScheduler>>;
 export type Card = ReturnType<Scheduler['newCard']>;
@@ -27,11 +27,11 @@ export const normalizeWord=(word:string)=>word.trim().normalize('NFC').toLowerCa
 const enqueue=(table:string,recordId:string)=>db.sync_outbox.put({id:crypto.randomUUID(),table,recordId,updatedAt:Date.now()});
 export async function setStatus(id:string,status:WordStatus) {
  id=normalizeWord(id);
- await db.transaction('rw',[db.user_word_states,db.sync_outbox],async()=>{const old=await db.user_word_states.get(id);await db.user_word_states.put({id,status,bookmarked:old?.bookmarked??false,updatedAt:Date.now()});await enqueue('user_word_states',id);});
+ await db.transaction('rw',[db.user_word_states,db.sync_outbox],async()=>{const old=await db.user_word_states.get(id);await db.user_word_states.put({id,status,bookmarked:old?.bookmarked??false,updatedAt:Date.now(),...(status==='mastered'?{masterySource:'manual' as const}:{})});await enqueue('user_word_states',id);});
 }
 export async function setBookmark(id:string,bookmarked:boolean) {
  id=normalizeWord(id);
- await db.transaction('rw',[db.user_word_states,db.sync_outbox],async()=>{const old=await db.user_word_states.get(id);await db.user_word_states.put({id,status:old?.status??'unassessed',bookmarked,updatedAt:Date.now()});await enqueue('user_word_states',id);});
+ await db.transaction('rw',[db.user_word_states,db.sync_outbox],async()=>{const old=await db.user_word_states.get(id);await db.user_word_states.put({...old,id,status:old?.status??'unassessed',bookmarked,updatedAt:Date.now()});await enqueue('user_word_states',id);});
 }
 export async function saveNote(id:string,text:string) {
  await db.transaction('rw',[db.notes,db.sync_outbox],async()=>{await db.notes.put({id:normalizeWord(id),text,updatedAt:Date.now()});await enqueue('notes',normalizeWord(id));});
@@ -79,7 +79,7 @@ export function validateRow(name:string,row:Record<string,unknown>) {
  if((stringFields[name]??[]).some(key=>typeof row[key]!=='string')||(numberFields[name]??[]).some(key=>typeof row[key]!=='number'||!Number.isFinite(row[key])||Number(row[key])<0))invalid();
  if(name==='words'&&(!Array.isArray(row.tags)||row.tags.some(t=>typeof t!=='string')))invalid();
  if(name==='wordbooks'&&(!Array.isArray(row.wordIds)||row.wordIds.some(t=>typeof t!=='string')))invalid();
- if(name==='user_word_states'&&(!['unassessed','known','unknown','learning','reviewing','mastered'].includes(String(row.status))||typeof row.bookmarked!=='boolean'))invalid();
+ if(name==='user_word_states'&&(!['unassessed','known','unknown','learning','reviewing','mastered'].includes(String(row.status))||typeof row.bookmarked!=='boolean'||(row.masterySource!==undefined&&(row.masterySource!=='manual'||row.status!=='mastered'))))invalid();
  if(name==='settings'&&!['string','number','boolean'].includes(typeof row.value))invalid();
  if(name==='review_logs'&&row.retention!==undefined&&(typeof row.retention!=='number'||!Number.isFinite(row.retention)||row.retention<.7||row.retention>.97))invalid();
  if(name==='review_logs'&&(!isRecord(row.log)||typeof row.correct!=='boolean'||![1,2,3,4].includes(Number(row.rating))))invalid();

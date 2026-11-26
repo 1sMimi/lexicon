@@ -44,3 +44,6 @@ P0: infrastructure/data/dictionary/study/review/notes/offline/backup. P1: reader
 
 ## Today preferences
 List the four built-in books from introductory to advanced: High Frequency 3000, TOEFL, IELTS, GRE. Keep the GRE study tile as the default new-word shortcut. Put a clearly labeled Quick Assessment link above the study tiles; a familiar word is marked Known and omitted from first-time study. Keep Regular available while increasing the default typography weight.
+
+## Manual mastery
+New-word recognition offers Mark as mastered. It records a manual word-level status, skips the new word, and creates neither a recall card nor a review event. Preserve this distinction in Insights. The word status can be changed again in the dictionary entry. This option does not confer mastery on individual senses.

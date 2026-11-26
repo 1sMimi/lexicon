@@ -16,3 +16,4 @@
 - User subsequently approved public visibility for 1sMimi/lexicon. Production Pages URL is https://1smimi.github.io/lexicon/. An HTTP/1.1 retry with the gh credential helper succeeded for the earlier Git transport problem.
 - User prefers heavier type and Today wordbooks ordered High Frequency 3000, TOEFL, IELTS, GRE. Keep Quick Assessment easy to find above daily study actions.
 - A long-lived PWA can continue serving the previous app shell while a new worker waits. Lexicon now shows a user-confirmed update action and checks on foreground/reconnect; users of the preceding build may need to close every Lexicon client once.
+- User wants to skip obvious words by manually marking them Mastered in Study. The manual flag is word-level and distinct from FSRS evidence; it neither fabricates logs nor marks any individual sense separately.

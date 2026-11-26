@@ -48,3 +48,6 @@
 
 ## App update recovery
 - Confirmed the published Today order in a fresh Chromium profile. Added a visible update prompt for a waiting service worker and foreground/reconnect checks. Chromium verified a waiting update, explicit activation and preservation of existing browser storage.
+
+## Manual mastery
+- New-word recognition can mark a word manually mastered and advance. The mark persists across reloads, is reversible in the dictionary, and is distinguished in Insights. It creates no FSRS card, review log, or study attempt. Chromium verified persistence and isolation across independent browser profiles; typecheck, 23 tests and production build passed. Sense-level scheduling remains outstanding.
