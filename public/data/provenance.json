@@ -1,0 +1,146 @@
+{
+  "source": "https://github.com/skywind3000/ECDICT",
+  "commit": "39cfb9672c0906b63569e0453c2e6abfb9ab182a",
+  "license": "MIT",
+  "csvSha256": "d1ecbdf9ee2b920afb6f430ca6b6bb9f559588cf0dff86e04bd255f9390843cc",
+  "selection": "Lowercase ASCII lexical entries; High Frequency uses positive BNC rank; exam lists use exact source tags.",
+  "counts": {
+    "High Frequency 3000": 3000,
+    "GRE": 7504,
+    "TOEFL": 6970,
+    "IELTS": 5038
+  },
+  "coreWords": 13916,
+  "packs": [
+    {
+      "file": "dictionary-a.json",
+      "count": 29010,
+      "bytes": 5849181
+    },
+    {
+      "file": "dictionary-b.json",
+      "count": 22488,
+      "bytes": 4672944
+    },
+    {
+      "file": "dictionary-c.json",
+      "count": 33815,
+      "bytes": 7274758
+    },
+    {
+      "file": "dictionary-d.json",
+      "count": 20226,
+      "bytes": 4304946
+    },
+    {
+      "file": "dictionary-e.json",
+      "count": 15276,
+      "bytes": 3192998
+    },
+    {
+      "file": "dictionary-f.json",
+      "count": 12970,
+      "bytes": 2804015
+    },
+    {
+      "file": "dictionary-g.json",
+      "count": 12847,
+      "bytes": 2680762
+    },
+    {
+      "file": "dictionary-h.json",
+      "count": 18517,
+      "bytes": 3778161
+    },
+    {
+      "file": "dictionary-i.json",
+      "count": 12188,
+      "bytes": 2640619
+    },
+    {
+      "file": "dictionary-j.json",
+      "count": 3104,
+      "bytes": 658804
+    },
+    {
+      "file": "dictionary-k.json",
+      "count": 6422,
+      "bytes": 1225505
+    },
+    {
+      "file": "dictionary-l.json",
+      "count": 13048,
+      "bytes": 2697506
+    },
+    {
+      "file": "dictionary-m.json",
+      "count": 26540,
+      "bytes": 5332150
+    },
+    {
+      "file": "dictionary-n.json",
+      "count": 11753,
+      "bytes": 2315566
+    },
+    {
+      "file": "dictionary-o.json",
+      "count": 10860,
+      "bytes": 2236497
+    },
+    {
+      "file": "dictionary-p.json",
+      "count": 34754,
+      "bytes": 7210981
+    },
+    {
+      "file": "dictionary-q.json",
+      "count": 1774,
+      "bytes": 402449
+    },
+    {
+      "file": "dictionary-r.json",
+      "count": 16330,
+      "bytes": 3662513
+    },
+    {
+      "file": "dictionary-s.json",
+      "count": 38313,
+      "bytes": 8320052
+    },
+    {
+      "file": "dictionary-t.json",
+      "count": 20684,
+      "bytes": 4348000
+    },
+    {
+      "file": "dictionary-u.json",
+      "count": 8153,
+      "bytes": 1718099
+    },
+    {
+      "file": "dictionary-v.json",
+      "count": 5658,
+      "bytes": 1194565
+    },
+    {
+      "file": "dictionary-w.json",
+      "count": 7356,
+      "bytes": 1626717
+    },
+    {
+      "file": "dictionary-x.json",
+      "count": 858,
+      "bytes": 188475
+    },
+    {
+      "file": "dictionary-y.json",
+      "count": 1450,
+      "bytes": 297099
+    },
+    {
+      "file": "dictionary-z.json",
+      "count": 1873,
+      "bytes": 377803
+    }
+  ]
+}
