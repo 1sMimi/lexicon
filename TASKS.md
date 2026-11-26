@@ -55,3 +55,6 @@
 ## Focused meaning and sign-in
 - Dictionary entries can save a personal study meaning. Recognition, delayed recall, and due reviews use that clue; existing word-level FSRS scheduling is unchanged. TypeScript, 23 tests, build and Chromium workflow passed.
 - User requests email and GitHub sign-in for cross-device sync without Supabase. Firebase Auth and a private per-user storage adapter require a user-owned Firebase project and account authorization; neither is live yet.
+
+## Firebase hosted sign-in readiness
+- Added optional Firebase email/password and GitHub sign-in, a Firestore sync provider and per-user access rules. Verified typecheck, 24 tests, both production builds and Chromium guest/settings rendering with and without test Web App configuration. Project `lexicon-2dcaa` exists per user. Dashboard control timed out; real providers, public Web App config, rules, and two-device account verification remain pending.

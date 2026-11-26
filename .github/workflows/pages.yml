@@ -26,6 +26,8 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+        env:
+          VITE_FIREBASE_WEB_CONFIG: ${{ vars.FIREBASE_WEB_CONFIG }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

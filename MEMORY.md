@@ -19,3 +19,4 @@
 - User wants to skip obvious words by manually marking them Mastered in Study. The manual flag is word-level and distinct from FSRS evidence; it neither fabricates logs nor marks any individual sense separately.
 - Per-word Study meaning is a local, backup-included clue override for study and review. It does not change the word ID or FSRS card and is not a separate sense mastery record.
 - User prefers email and GitHub sign-in for cross-device sync and wants to avoid the manual Supabase workflow.
+- User created Firebase project `lexicon-2dcaa`. Hosted auth is gated on the public `FIREBASE_WEB_CONFIG` Actions variable. Deploy Firestore rules and enable providers before activation. GitHub OAuth secret is entered directly in Firebase; never in the repository or chat.

@@ -18,3 +18,6 @@ Use one local IndexedDB preference for the enabled flag, local time and selected
 
 ## Installed app updates
 Workbox keeps the active version until a new precache is ready. The app checks for updates on foreground and reconnect and shows an explicit reload button for a waiting worker. Applying an update swaps the cached app shell without modifying IndexedDB. Verify the published wordbook order in a fresh browser and verify the update prompt in an already-controlled tab. Users on the older build without a prompt can close all Lexicon tabs and app windows once, then reopen.
+
+## Hosted Firebase sync
+Firebase Auth owns login and UID. The existing SyncProvider contract remains the data boundary, with Firestore documents under `/users/{uid}/lexiconRecords/{id}`. Server timestamps order incremental pulls and Firestore transactions check the acknowledged record version before writes. Rules enforce UID ownership, version progression, immutable review history, and deny deletion. Browser-local data is bound to the first cloud identity; a different account must use a separate browser profile. No app secrets are embedded. The host can supply the Firebase public Web App configuration at build time. Acceptance requires Firebase rules deployed in a user-owned project, actual email/GitHub sign-ins and two-device replication before activation is claimed.

@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/lexiconRecords/{id} {
+      function owner() {
+        return request.auth != null && request.auth.uid == uid && request.auth.token.email_verified == true;
+      }
+      function valid() {
+        let row = request.resource.data;
+        return row.keys().hasAll(['table_name', 'record_id', 'payload', 'version', 'updated_at'])
+          && row.keys().hasOnly(['table_name', 'record_id', 'payload', 'version', 'updated_at'])
+          && row.table_name in ['words', 'wordbooks', 'wordbook_memberships', 'user_word_states', 'notes', 'review_logs', 'reading_positions', 'vocabulary_tests', 'settings']
+          && row.record_id is string && row.record_id.size() > 0
+          && row.payload is map && row.payload.id == row.record_id
+          && row.version is int && row.updated_at == request.time;
+      }
+      allow read: if owner();
+      allow create: if owner() && valid() && request.resource.data.version == 1;
+      allow update: if owner() && valid()
+        && request.resource.data.table_name == resource.data.table_name
+        && request.resource.data.record_id == resource.data.record_id
+        && request.resource.data.version == resource.data.version + 1
+        && (resource.data.table_name != 'review_logs' || request.resource.data.payload == resource.data.payload);
+      allow delete: if false;
+    }
+  }
+}
