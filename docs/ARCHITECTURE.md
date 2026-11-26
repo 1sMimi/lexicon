@@ -12,3 +12,6 @@ A browser-local draft per study scope stores the event counter, pending recall I
 
 ## V4 local workflow additions
 Quick Assessment reads unassessed entries from the chosen installed wordbook, writes the existing shared state, and never creates cards or review events. A saved assessment scope and cursor can resume at any time. Reader search and bookmarks use chapter IDs and UTF-16 offsets into immutable imported text; scroll pixels are derived on navigation and not used as bookmark identity. Reader bookmarks remain device-local but are included in JSON backup through settings. Keyboard shortcuts are scoped to the visible Study stage and ignore editable controls, dialogs, and modified keys. Acceptance checks cover persistence, no new FSRS event on assessment, and restoration after viewport/font changes.
+
+## Daily reminder
+Use one local IndexedDB preference for the enabled flag, local time and selected weekdays. Today shows the reminder at or after the configured time and remembers same-day dismissal across reloads. No platform notification permission or background scheduling is required. Test disabled, weekday mismatch, before/after time, persistence and daily dismissal.

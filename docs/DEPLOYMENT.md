@@ -21,3 +21,6 @@ Use Settings → Pages → Source → GitHub Actions. Then set the repository Ac
 Verify the actual HTTPS Pages URL and /lexicon/ subpath, reload each route, install PWA on target devices, download resources then test offline, test service worker updates, and transfer a backup before switching origins. localhost browser data does not automatically transfer to github.io.
 
 Cloud sync requires applying the SQL migration and real user-level RLS/conflict/network interruption tests with two clients. A mock-provider test is not a live cloud certification.
+
+## Keep the repository private on the current plan
+The GitHub Pages API returned HTTP 422 for the private repository. A static build can be deployed independently on Cloudflare Pages with an authorized Cloudflare account. In Workers & Pages, choose Create application and Direct Upload, then upload the release ZIP with `index.html` at its root. Direct Upload publishes static assets and does not connect the repository. See https://developers.cloudflare.com/pages/get-started/direct-upload/.

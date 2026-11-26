@@ -32,3 +32,8 @@
 - Reader chapter search, text-offset bookmarks and highlights, annotation editing/deletion and backup through settings are implemented. Reader layout modes and cloud annotation sync remain open.
 - Study has stage-aware P/B/Space/1–4 shortcuts; N/Esc and optional gestures remain open.
 - 21 tests, TypeScript and production build passed. Chromium at 390px verified interleaved recall after refresh and final FSRS rating, font preference persistence, assessment persistence, chapter search and bookmark annotation persistence. Production offline reload and dictionary lookup passed.
+
+## Release readiness audit
+- Optional in-app reminder with time/weekdays and same-day dismissal passed Chromium mobile verification. Background notifications remain outside implemented scope.
+- TypeScript, 22 tests and the production build pass. Static release ZIP includes font and dictionary licenses; verified ZIP integrity and direct-upload file constraints.
+- Full V2–V4 acceptance matrix is in outputs/ACCEPTANCE.md. Remote main was verified at 09eac4f after another Git transport timeout. GitHub Pages has not published. A serving account or a GitHub plan that supports private repository Pages is needed.
