@@ -17,3 +17,10 @@
 - Cloud deployment and live RLS/two-device sync need user-owned provider configuration.
 - Original PDF page view implemented but pending runtime acceptance; source-form morphology/lemma disambiguation still limited to exact forms.
 - Cloud document storage, richer question types, per-sense editing, comprehensive analytics and remaining acceptance checks incomplete.
+
+## V4 delivery checkpoint
+- Implemented global font weight controls and Medium defaults, 30 new words by default with zero allowed, interleaved delayed spelling with configurable interval, first-attempt retention, deferred retries and local queue restore.
+- Insights now separates first learning from later reviews, reports unique growth, book completion and capability evidence.
+- Original PDF canvas, selectable text and most recent reading restored were verified in Chromium on the preceding baseline. Recheck these during final V4 browser acceptance.
+- V4 typecheck, 19 tests and production build pass. Pending browser acceptance for new session flows and fonts.
+- Outstanding: sense-level schema migration/cards/notes; quick assessment and extra learning plans; Reader layouts/search/stable annotations/bookmarks; keyboard shortcuts and gestures; bilingual UI; optional reminders; private file sync, synced session resume and real RLS/two-device verification; Pages publishing and installed-device validation.

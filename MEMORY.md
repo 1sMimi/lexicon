@@ -9,3 +9,5 @@
 - Production Vite 8 output contained unreplaced dynamic-import markers despite successful build; require browser/syntax validation and migrate tooling rather than claim success.
 
 - Vite 7.3.8 + plugin-react 5.2 + Vitest 3.2 resolves production output corruption; 16 tests and production syntax check passed.
+- V4 supersedes conflicting prior requirements. Hybrid short-term recall uses a local per-scope draft and commits one long-term event on final rating. Default new-word quota is 30 and may be zero. Private file sync will require first-use consent before transfers.
+- GitHub target confirmed by the user as 1sMimi/lexicon. Create it privately; ask before making the repository public.

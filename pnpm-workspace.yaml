@@ -1,4 +1,4 @@
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
 overrides:
   rollup: npm:@rollup/wasm-node@4.68.0
