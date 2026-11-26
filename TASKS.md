@@ -45,3 +45,6 @@
 
 ## Today readability and assessment
 - Raised default text weights using bundled font variants. Today lists High Frequency 3000, TOEFL, IELTS, then GRE and shows Quick Assessment before the study tiles. The assessment explains Known versus skipping a question. TypeScript, all 22 tests, and production build passed.
+
+## App update recovery
+- Confirmed the published Today order in a fresh Chromium profile. Added a visible update prompt for a waiting service worker and foreground/reconnect checks. Chromium verified a waiting update, explicit activation and preservation of existing browser storage.

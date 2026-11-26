@@ -15,3 +15,6 @@ Quick Assessment reads unassessed entries from the chosen installed wordbook, wr
 
 ## Daily reminder
 Use one local IndexedDB preference for the enabled flag, local time and selected weekdays. Today shows the reminder at or after the configured time and remembers same-day dismissal across reloads. No platform notification permission or background scheduling is required. Test disabled, weekday mismatch, before/after time, persistence and daily dismissal.
+
+## Installed app updates
+Workbox keeps the active version until a new precache is ready. The app checks for updates on foreground and reconnect and shows an explicit reload button for a waiting worker. Applying an update swaps the cached app shell without modifying IndexedDB. Verify the published wordbook order in a fresh browser and verify the update prompt in an already-controlled tab. Users on the older build without a prompt can close all Lexicon tabs and app windows once, then reopen.
