@@ -1,5 +1,6 @@
 import './reader.css';
 import PdfPage from './PdfPage';
+import { locateText, readMarks, type ReaderMark } from './reader-marks';
 import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, createWordbook, setStatus } from './db';
@@ -10,6 +11,12 @@ export default function Reader({ onWord }: { onWord: (id: string) => void }) {
   const states = useLiveQuery(() => db.user_word_states.toArray(), []) ?? [];
   const [active, setActive] = useState(''); const [originalPages, setOriginalPages] = useState(false); const [chapterId, setChapterId] = useState('');
   const chapters = useLiveQuery(() => active ? db.document_chapters.where('documentId').equals(active).sortBy('order') : [], [active]) ?? [];
+  const [query, setQuery] = useState('');
+  const [match, setMatch] = useState(-1);
+  const [target, setTarget] = useState<ReaderMark | null>(null);
+  const markKey = `reader-marks:${active}`;
+  const savedMarks = useLiveQuery(() => db.settings.get(markKey), [markKey]);
+  const marks = readMarks(savedMarks?.value);
   const [title, setTitle] = useState(''); const [folder, setFolder] = useState(''); const [paste, setPaste] = useState('');
   const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false); const [showVocab, setShowVocab] = useState(false);
   const [fontSize, setFontSize] = useState(22); const [lineHeight, setLineHeight] = useState(1.9); const [width, setWidth] = useState(740);
@@ -31,6 +38,47 @@ export default function Reader({ onWord }: { onWord: (id: string) => void }) {
   useEffect(() => { if (!active || !chapter || !scrollRef.current) return; void db.reading_positions.get(active).then(position => {
     if (scrollRef.current && position?.chapterId === chapter.id) scrollRef.current.scrollTop = position.offset;
   }); }, [active, chapter?.id]);
+  function jump(offset:number) {
+    const container = scrollRef.current;
+    if (!container) return;
+    const token = Array.from(container.querySelectorAll<HTMLElement>('[data-text-start]')).find(element => {
+      const start = Number(element.dataset.textStart);
+      return start <= offset && offset < start + (element.textContent?.length ?? 0);
+    });
+    token?.scrollIntoView({block:'center'});
+  }
+  useEffect(() => { if (target && chapter?.id === target.chapterId) { jump(target.start); setTarget(null); } }, [chapter?.id, target]);
+  useEffect(() => setMatch(-1), [chapter?.id]);
+  async function updateMarks(change:(current:ReaderMark[])=>ReaderMark[]) {
+    try {
+      await db.transaction('rw', db.settings, async () => {
+        const existing = await db.settings.get(markKey);
+        await db.settings.put({id:markKey,value:JSON.stringify(change(readMarks(existing?.value)))});
+      });
+    } catch (failure) { setMessage(String(failure)); }
+  }
+  function addMark(bookmark:boolean) {
+    const container = scrollRef.current;
+    if (!container || !chapter) return;
+    let start = 0, end = 0;
+    if (bookmark) {
+      const top = container.getBoundingClientRect().top;
+      const element = Array.from(container.querySelectorAll<HTMLElement>('[data-text-start]')).find(item => item.getBoundingClientRect().bottom > top);
+      start = Number(element?.dataset.textStart ?? 0); end = start;
+    } else {
+      const selection = window.getSelection();
+      if (!selection?.rangeCount || selection.isCollapsed) {setMessage('Select text to highlight.');return;}
+      const selectedRange = selection.getRangeAt(0);
+      if (!container.contains(selectedRange.startContainer) || !container.contains(selectedRange.endContainer)) return;
+      const prefix = selectedRange.cloneRange();
+      prefix.selectNodeContents(container);
+      prefix.setEnd(selectedRange.startContainer, selectedRange.startOffset);
+      start = prefix.toString().length; end = start + selectedRange.toString().length;
+      selection.removeAllRanges();
+    }
+    const item = {id:crypto.randomUUID(),chapterId:chapter.id,start,end,note:'',quote:chapter.text.slice(start,bookmark ? start+85 : end)};
+    void updateMarks(current => [...current,item]);
+  }
   async function importChapters(name: string, imported: ImportedChapter[], originalFile?: File) {
     const id = crypto.randomUUID(), now = Date.now();
     await db.transaction('rw', db.documents, db.document_chapters, async () => {
@@ -65,9 +113,12 @@ export default function Reader({ onWord }: { onWord: (id: string) => void }) {
       {showVocab && <div className="panel"><div className="row"><h3>Chapter vocabulary</h3><select aria-label="Filter vocabulary status" value={filter} onChange={e => setFilter(e.target.value)}>{['all','unassessed','known','unknown','learning','reviewing','mastered'].map(status => <option key={status}>{status}</option>)}</select></div>
         <div className="row"><button onClick={() => void addBook(words.map(([id]) => id)).catch(error => setMessage(String(error)))}>Create chapter wordbook</button><button disabled={!selected.length} onClick={() => void addBook(selected).catch(error => setMessage(String(error)))}>Save selected</button>{(['known','unknown'] as const).map(status => <button key={status} disabled={!selected.length} onClick={() => void Promise.all(selected.map(id => setStatus(id,status))).catch(error => setMessage(String(error)))}>Mark {status}</button>)}</div>
         <div style={{maxHeight:320,overflow:'auto'}}>{words.filter(([id]) => filter === 'all' || (stateMap.get(id)?.status ?? 'unassessed') === filter).map(([id,count]) => <div className="row" key={id}><label><input type="checkbox" checked={selected.includes(id)} onChange={e => setSelected(previous => e.target.checked ? [...previous,id] : previous.filter(item => item !== id))}/><button onClick={() => onWord(id)}>{id}</button></label><span>{count} occurrences · {stateMap.get(id)?.status ?? 'unassessed'}</span></div>)}</div><small>Exact forms are kept separate to avoid merging different meanings.</small></div>}
+      <form className="row" onSubmit={event => {event.preventDefault(); const index=locateText(chapter?.text ?? '',query,match+1);setMatch(index);if(index>=0){jump(index);setMessage('Match found in this chapter.');}else setMessage('No match in this chapter.');}}><input aria-label="Search chapter" value={query} onChange={event=>{setQuery(event.target.value);setMatch(-1);}}/><button disabled={!query.trim()}>Find next</button></form>
+      <div className="row"><button onClick={()=>addMark(true)}>Bookmark position</button><button onMouseDown={event=>event.preventDefault()} onClick={()=>addMark(false)}>Highlight selection</button></div>
+      {marks.length>0 && <details className="panel"><summary>Bookmarks and annotations ({marks.length})</summary>{marks.map(item=><article className="panel" key={item.id}><p>{item.start===item.end?'Bookmark':'Highlight'} · {item.quote}</p><div className="row"><button onClick={()=>{setChapterId(item.chapterId);setTarget(item);}}>Go to position</button><button onClick={()=>void updateMarks(current=>current.filter(mark=>mark.id!==item.id))}>Delete</button></div><label>Annotation<textarea key={`${item.id}:${item.note}`} defaultValue={item.note} onBlur={event=>{const note=event.target.value;if(note!==item.note)void updateMarks(current=>current.map(mark=>mark.id===item.id?{...mark,note}:mark));}}/></label></article>)}</details>}
       {originalPages && document?.originalFile && chapter && <PdfPage file={document.originalFile} pageNumber={chapter.order + 1} onWord={word => void lookup(word, Math.max(0, chapter.text.toLowerCase().indexOf(word))).catch(error => setMessage(String(error)))} />}
       <div ref={scrollRef} className="reader-text" style={{fontSize,lineHeight,maxWidth:width,maxHeight:'65vh',overflowY:'auto',whiteSpace:'pre-wrap',margin:'2rem auto'}} onScroll={e => { if (!chapter) return; const offset=e.currentTarget.scrollTop; void db.reading_positions.put({id:active,documentId:active,chapterId:chapter.id,offset,updatedAt:Date.now()}).catch(error => setMessage(`Reading position could not be saved: ${String(error)}`)) }}>
-      {parts.map(({text:part,offset},index) => /^[A-Za-z]/.test(part) ? <button key={index} className={`reader-word ${markings ? `word-${stateMap.get(part.toLowerCase())?.status ?? 'unassessed'}` : ''}`} title={stateMap.get(part.toLowerCase())?.status ?? 'unassessed'} onClick={() => void lookup(part,offset).catch(error => setMessage(String(error)))}>{part}</button> : part)}
+      {parts.map(({text:part,offset},index) => {const marked=marks.some(item=>item.chapterId===chapter?.id && item.start<offset+part.length && item.end>offset) || (match>=0&&match<offset+part.length&&match+query.length>offset); return <span key={index} data-text-start={offset} className={marked?'reader-mark':undefined}>{/^[A-Za-z]/.test(part) ? <button className={`reader-word ${markings ? `word-${stateMap.get(part.toLowerCase())?.status ?? 'unassessed'}` : ''}`} title={stateMap.get(part.toLowerCase())?.status ?? 'unassessed'} onClick={() => void lookup(part,offset).catch(error => setMessage(String(error)))}>{part}</button> : part}</span>})}
       </div></>}
   </section>;
 }

@@ -26,3 +26,9 @@
 - Outstanding: sense-level schema migration/cards/notes; quick assessment and extra learning plans; Reader layouts/search/stable annotations/bookmarks; keyboard shortcuts and gestures; bilingual UI; optional reminders; private file sync, synced session resume and real RLS/two-device verification; Pages publishing and installed-device validation.
 
 - Private origin `1sMimi/lexicon` created and `main` pushed. GitHub Pages API rejected this repository on its current plan (HTTP 422). CI remains enabled; deployment waits for Pages eligibility and explicit enablement.
+
+## Local acceptance update
+- Quick Assessment supports selecting a wordbook, shared known/unknown state, skip/revisit and bulk selection. A separate uncertain state remains open.
+- Reader chapter search, text-offset bookmarks and highlights, annotation editing/deletion and backup through settings are implemented. Reader layout modes and cloud annotation sync remain open.
+- Study has stage-aware P/B/Space/1–4 shortcuts; N/Esc and optional gestures remain open.
+- 21 tests, TypeScript and production build passed. Chromium at 390px verified interleaved recall after refresh and final FSRS rating, font preference persistence, assessment persistence, chapter search and bookmark annotation persistence. Production offline reload and dictionary lookup passed.

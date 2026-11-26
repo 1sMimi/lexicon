@@ -9,3 +9,6 @@ Acceptance: real source data in four books; cross-book state sharing; persisted 
 
 ## V4 incremental study session
 A browser-local draft per study scope stores the event counter, pending recall IDs, first-answer evidence and completed IDs. An eligible recall takes priority over another introduction; an exhausted introduction queue drains pending recall. Only the final rating commits to the existing long-term scheduler. Old FSRS records retain their IDs. Cross-device session restore requires a separate sync extension.
+
+## V4 local workflow additions
+Quick Assessment reads unassessed entries from the chosen installed wordbook, writes the existing shared state, and never creates cards or review events. A saved assessment scope and cursor can resume at any time. Reader search and bookmarks use chapter IDs and UTF-16 offsets into immutable imported text; scroll pixels are derived on navigation and not used as bookmark identity. Reader bookmarks remain device-local but are included in JSON backup through settings. Keyboard shortcuts are scoped to the visible Study stage and ignore editable controls, dialogs, and modified keys. Acceptance checks cover persistence, no new FSRS event on assessment, and restoration after viewport/font changes.
