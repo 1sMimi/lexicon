@@ -26,3 +26,4 @@
 - The public Pages deployment uses Firebase email and GitHub sign-in after an anonymous Firestore denial gate. The user completed the GitHub OAuth console setup. The live GitHub button reached GitHub's sign-in page in Chromium after Actions run 45835958186. Completed GitHub authorization and authenticated cross-device sync still need verification.
 - The production Firebase verification email reached a user-controlled 163.com inbox during a live sign-up test. Earlier Apple relay and Gmail attempts did not reach the user. A successful send response alone is insufficient evidence of inbox delivery.
 - User approved Google sign-in as a way to use Gmail without waiting for a Lexicon verification email. Keep Firebase's verified-email and per-user Firestore checks. Enable the provider before exposing the button.
+- Password recovery uses Firebase's password-reset email and keeps the existing account. Email verification for cloud sync remains a separate step.

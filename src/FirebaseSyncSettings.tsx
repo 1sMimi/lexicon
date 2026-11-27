@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { createUserWithEmailAndPassword, GithubAuthProvider, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut, type User } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
+import { createUserWithEmailAndPassword, GithubAuthProvider, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, type User } from 'firebase/auth';
 import { firebaseAuth, firebaseProvider } from './firebase-sync';
 import { syncNow } from './sync';
 
@@ -19,6 +20,7 @@ export default function FirebaseSyncSettings() {
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState('');
   const active=useRef(false);
+  const emailInput=useRef<HTMLInputElement>(null);
 
   useEffect(()=>onAuthStateChanged(firebaseAuth,value=>{setUser(value);setVerified(value?.emailVerified??false);}),[]);
   useEffect(()=>{
@@ -38,6 +40,17 @@ export default function FirebaseSyncSettings() {
     setPassword('');
     if(create&&!result.user.emailVerified){await sendEmailVerification(result.user);setMessage('Verification email sent. Confirm your address, then return here.');}
   });
+  const resetPassword=()=>{
+    if(!emailInput.current?.reportValidity())return;
+    void perform(async()=>{
+      try {
+        await sendPasswordResetEmail(firebaseAuth,email.trim());
+      } catch(error) {
+        if(!(error instanceof FirebaseError && error.code==='auth/user-not-found'))throw error;
+      }
+      setMessage('If this email is registered, you’ll receive a password reset link. Check your inbox and spam folder.');
+    });
+  };
   const sync=()=>perform(async()=>{
     if(!user)return;
     const result=await syncNow(firebaseProvider(user.uid));
@@ -47,9 +60,10 @@ export default function FirebaseSyncSettings() {
   return <section className="panel"><h2>Cross-device sync</h2>
     <p className="muted">Sign in to sync your learning records. Reading files stay on this device. Use the same sign-in method on each device.</p>
     {!user?<><form onSubmit={event=>{event.preventDefault();void login();}}>
-      <label className="field">Email<input type="email" required autoComplete="username" value={email} onChange={event=>setEmail(event.target.value)}/></label>
+      <label className="field">Email<input ref={emailInput} type="email" required autoComplete="username" value={email} onChange={event=>setEmail(event.target.value)}/></label>
       <label className="field">Password<input type="password" required autoComplete={create?'new-password':'current-password'} value={password} onChange={event=>setPassword(event.target.value)}/></label>
       <div className="row"><button className="primary" disabled={busy}>{create?'Create email account':'Sign in with email'}</button><button type="button" disabled={busy} onClick={()=>setCreate(!create)}>{create?'Use an existing account':'Create an account'}</button></div>
+      {!create && <button type="button" disabled={busy} onClick={resetPassword}>Forgot password?</button>}
     </form><div className="row">
       {googleEnabled && <button className="button" disabled={busy} onClick={()=>void perform(async()=>{await signInWithPopup(firebaseAuth,new GoogleAuthProvider());})}>Continue with Google</button>}
       {githubEnabled && <button className="button" disabled={busy} onClick={()=>void perform(async()=>{await signInWithPopup(firebaseAuth,new GithubAuthProvider());})}>Continue with GitHub</button>}

@@ -86,3 +86,7 @@
 
 ## Google sign-in
 - Added hosted Google sign-in behind a Pages build switch. TypeScript, 26 tests and production build passed. Chromium at 390px and 1280px showed all three login controls with the switch enabled. The Firebase console timed out before provider configuration. Activation and real Google sign-in/sync are pending.
+- The implementation is committed locally as `ae8f9f8`. The Git transport timed out twice. GitHub main was last verified at `dca61ce` during this rollout.
+
+## Password recovery
+- Added Forgot password to hosted email sign-in. TypeScript, 26 tests and a production build passed. Chromium at 390px and 1280px verified that the reset requires a valid email, sends no password, and shows the same generic success message for known and unknown recipients. Browser checks used a mocked reset endpoint and did not send real mail.

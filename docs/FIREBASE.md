@@ -10,6 +10,8 @@
 
 Existing users can continue without an account. Cloud sign-in authorizes this browser's learning records to sync. Use the same sign-in method on both devices and a separate browser profile for different people. Original reading files, reading marks and study drafts remain local. Oversized journal screenshots may exceed Firestore's document limit; a failed sync retains the local record. Firebase config has no dependency on Supabase. Existing Supabase-bound local profiles should use backup/restore in a separate profile pending an account migration flow.
 
+For email/password recovery, enter the account email and choose **Forgot password?** in the hosted sign-in form. Firebase sends a reset link using the Password reset template. Verify that this action requires a valid email, sends no password, and gives the same response for known and unknown addresses. Completing a reset keeps the existing account and does not replace email verification for sync.
+
 ## Staged activation
 The Pages workflow probes an anonymous collection read against the configured Firestore project before building hosted sync. The release stops unless Firestore responds `PERMISSION_DENIED`. This checks anonymous denial only; verify that signed-in users cannot access another UID and that legitimate writes succeed as part of the authenticated smoke test. Set `FIREBASE_GITHUB_ENABLED=true` only after registering the OAuth callback and enabling GitHub in Firebase. Email sign-in can be enabled first.
 
