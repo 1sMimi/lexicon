@@ -29,6 +29,7 @@ jobs:
         env:
           VITE_FIREBASE_WEB_CONFIG: ${{ vars.FIREBASE_WEB_CONFIG }}
           VITE_FIREBASE_GITHUB_ENABLED: ${{ vars.FIREBASE_GITHUB_ENABLED }}
+          VITE_FIREBASE_GOOGLE_ENABLED: ${{ vars.FIREBASE_GOOGLE_ENABLED }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -69,3 +69,20 @@
 ## Single current wordbook and bulk mastery
 - Today shows one current book and links to All wordbooks. Six built-ins include ECDICT CET-4 (3,846) and CET-6 (5,406). Private imports remain available. Quick Assessment entry retired. Bulk mastery writes shared status but does not delete FSRS history or generate new events. TypeScript, 26 tests, production build and mobile Chromium flow passed.
 - User created the default Firestore database in production mode. Console connection timed out before publishing per-user rules. A copy of the reviewed rules is in outputs/lexicon-firestore.rules. Hosted sign-in remains off until rules, authorized domain and real verification are complete.
+
+## Hosted email rollout
+- User confirmed publishing the Firestore rules. Set public Firebase Web App configuration as a Pages build variable. Actions run 45833987668 verified anonymous record reads return PERMISSION_DENIED and deployed hosted email sign-in. Chromium verified the live guest workspace and email sign-in/registration controls. GitHub OAuth remains gated until its provider is configured. Authenticated two-device validation and cross-account rule testing remain pending.
+
+## Hosted GitHub login rollout
+- User confirmed completing the OAuth console setup. Enabled the production sign-in button and verified that Actions run 45835958186 passed build/deploy. A fresh Chromium session verified the live Settings button and its redirect to GitHub sign-in. Account authorization, return to Lexicon and authenticated cross-device sync remain to be verified.
+
+## Verification email delivery
+- User reports no verification email received. An earlier Apple relay attempt showed Firebase accepted the send request. Delivery to a regular inbox is also reported missing and has not been independently verified. Firebase console navigation timed out before inspecting the verification template. End-to-end acceptance requires receiving and opening a real message, then confirming sync access.
+- The owner's Firebase screenshot confirms the project uses the default verification template, the project noreply address and the hosted Firebase action handler. This confirms the mail can be identified by sender, not that it was delivered.
+- The hosted verification handler returned HTTP 200. The owner found zero matching messages in Gmail, including spam and trash. A proposed production test with a disposable inbox did not run because automatic approval review rejected sending a test verification token to that third-party inbox. A controlled inbox is still needed for delivery verification.
+- A Chromium test registered a temporary account using the owner's designated 163.com inbox through the live Lexicon UI. Firebase accepted one verification send request with HTTP 200, and the owner confirmed receipt. The cause of the earlier Gmail non-delivery, temporary account cleanup, link completion and authenticated sync have not been verified. Do not record the recipient address in project files.
+- A separate live sign-up test to the owner's Gmail inbox received HTTP 200 for one verification request and HTTP 200 for cleanup of the temporary test account. Gmail receipt is pending user confirmation.
+- The owner independently confirmed that the app displays the successful send status while signed in to their Gmail address, but no verification email arrived. That narrows the unresolved issue to delivery after Firebase accepted the request. Existing logs do not establish delivery to the mailbox.
+
+## Google sign-in
+- Added hosted Google sign-in behind a Pages build switch. TypeScript, 26 tests and production build passed. Chromium at 390px and 1280px showed all three login controls with the switch enabled. The Firebase console timed out before provider configuration. Activation and real Google sign-in/sync are pending.
