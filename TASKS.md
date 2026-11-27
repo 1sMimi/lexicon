@@ -90,3 +90,13 @@
 
 ## Password recovery
 - Added Forgot password to hosted email sign-in. TypeScript, 26 tests and a production build passed. Chromium at 390px and 1280px verified that the reset requires a valid email, sends no password, and shows the same generic success message for known and unknown recipients. Browser checks used a mocked reset endpoint and did not send real mail.
+- Pushed `ba8658d` and verified GitHub Pages run 46045475051 succeeded. A live Chromium check confirmed the reset button is present and rejects a blank email before submission. Account deletion is pending confirmation of scope.
+
+## Authentication account reset
+- The owner confirmed deleting all production Firebase Authentication users while preserving Firestore records and device data. The Firebase users console timed out both on navigation and reconnection, so no account deletion was attempted. Completion requires authorized console access and verification that the user list is empty.
+- The owner opened the Users page, but the browser connection still timed out and no accounts were deleted. The Dynamic Links banner applies to legacy mobile email-link and Cordova flows. Lexicon uses web email/password and Firebase-hosted email actions.
+
+## Parallel hosting and account migration
+- The owner chose to replace both hosting and the account/sync backend. Added Cloudflare Workers Static Assets configuration and a managed Supabase sign-in form with registration, GitHub OAuth, and PKCE password recovery. The form uses deployment configuration and requires no project setup from visitors. It reuses the existing Supabase sync protocol and per-user SQL policy. Account cleanup and old cloud data are outside this migration step.
+- TypeScript, 27 tests, a hosted production build and Cloudflare deployment dry run passed. Desktop and mobile Chromium verified signup, recovery callback/password update and GitHub redirect against mocked API responses. No real accounts or email were used.
+- Wrangler has no Cloudflare authentication on this machine. Project-owner access, a Supabase project with production SMTP, and live RLS, mail delivery, two-device sync and migration verification are required before replacing the public URL.

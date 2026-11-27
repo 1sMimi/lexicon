@@ -27,3 +27,4 @@
 - The production Firebase verification email reached a user-controlled 163.com inbox during a live sign-up test. Earlier Apple relay and Gmail attempts did not reach the user. A successful send response alone is insufficient evidence of inbox delivery.
 - User approved Google sign-in as a way to use Gmail without waiting for a Lexicon verification email. Keep Firebase's verified-email and per-user Firestore checks. Enable the provider before exposing the button.
 - Password recovery uses Firebase's password-reset email and keeps the existing account. Email verification for cloud sync remains a separate step.
+- The owner chose to replace both the website host and cloud identity/sync service. Prepare the replacement in parallel on Cloudflare Workers Static Assets and Supabase. Test real email and two-device sync before moving public links. Users restore backups on the new origin rather than sharing credentials or assuming old cloud IDs survive.

@@ -22,5 +22,11 @@ Verify the actual HTTPS Pages URL and /lexicon/ subpath, reload each route, inst
 
 Cloud sync requires applying the SQL migration and real user-level RLS/conflict/network interruption tests with two clients. A mock-provider test is not a live cloud certification.
 
+## Parallel Cloudflare and Supabase migration
+
+Deploy the existing Vite build as Cloudflare Workers Static Assets, using `wrangler.jsonc`, `pnpm build`, and `pnpm dlx wrangler deploy` with an authenticated Cloudflare account. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` as build variables. Leave `VITE_FIREBASE_WEB_CONFIG` unset on this deployment. Do not add private API keys, backups, or imported material to the build. Use a preview hostname before changing any public links. See [Cloudflare static assets](https://developers.cloudflare.com/workers/static-assets/).
+
+Configure the hosted project as described in [SYNC.md](SYNC.md). At the old site, first sync any pending data, then use **Export full backup** in the browser that holds the latest records. On the new origin, restore the backup before signing in and press **Sync now** to upload it. Downloads, browsers' installed PWA shortcuts and account credentials belong to their original origins. Cloud-only data needs to be pulled before export or migrated with an approved account-to-account mapping. Keep the old deployment and Firebase records available until the new site passes two-device sync and backup/restore checks.
+
 ## Keep the repository private on the current plan
 The GitHub Pages API returned HTTP 422 for the private repository. A static build can be deployed independently on Cloudflare Pages with an authorized Cloudflare account. In Workers & Pages, choose Create application and Direct Upload, then upload the release ZIP with `index.html` at its root. Direct Upload publishes static assets and does not connect the repository. See https://developers.cloudflare.com/pages/get-started/direct-upload/.

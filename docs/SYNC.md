@@ -1,5 +1,13 @@
 # Optional Supabase sync
 
+## Managed Supabase deployment
+
+Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` at build time to show a hosted sign-in form without setup fields. Apply `supabase/migrations/001_sync.sql`, enable email confirmation, and set the new site's HTTPS root as the Site URL. Allow that origin's exact `/?auth=return` callback. Configure production SMTP and verify Gmail and 163.com confirmation and reset delivery before sharing the site. The default mail service only sends to approved project team addresses. Complete verification and recovery links in the same browser that started the request (PKCE).
+
+To offer GitHub, register a dedicated OAuth app so the existing Firebase callback stays usable, configure it only in the Supabase dashboard, and set `VITE_SUPABASE_GITHUB_ENABLED=true`. Verify authenticated users can only access their own records. Firebase accounts and passwords are independent from Supabase accounts. Users can create a new account and restore their Lexicon backup, as described in [DEPLOYMENT.md](DEPLOYMENT.md).
+
+## Legacy manual configuration
+
 The local app requires no account. Sync is opt-in from Settings and requires your own Supabase project. Apply `supabase/migrations/001_sync.sql` in the SQL editor, enable email/password authentication and create a user. Configure the project URL and public anon/publishable key in Settings. Never use a service-role key. Passwords are not persisted. The access session is kept in sessionStorage for this tab only; signing out removes it.
 
 Protocol: private rows keyed by authenticated user, table and record ID. Server versions plus compare-and-swap RPC prevent blind overwrites. Each device stores acknowledged versions and fingerprints in local IndexedDB settings. On sync, remote rows are fetched and conflicts resolved without discarding unacknowledged local changes; local differences are then queued durably and uploaded. Notes preserve both versions on conflict. Review events are immutable unique IDs; cards are rebuilt from merged logs. Other mutable records use their updatedAt timestamp. A retry follows a server version conflict; unacknowledged local changes stay queued.

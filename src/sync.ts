@@ -34,7 +34,7 @@ function parseRemote(value:unknown):RemoteRow {
  validateRow(String(value.table_name),value.payload);
  return value as unknown as RemoteRow;
 }
-export function supabaseProvider(config:SyncConfig,session:SyncSession):SyncProvider {
+export function supabaseProvider(config:SyncConfig,session:Pick<SyncSession,'access_token'|'user'>):SyncProvider {
  validateConfig(config);const base=config.url.replace(/\/$/,'');
  const headers={apikey:config.key,Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json'};
  return { userId:session.user.id,
