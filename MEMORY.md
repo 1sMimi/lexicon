@@ -28,3 +28,4 @@
 - User approved Google sign-in as a way to use Gmail without waiting for a Lexicon verification email. Keep Firebase's verified-email and per-user Firestore checks. Enable the provider before exposing the button.
 - Password recovery uses Firebase's password-reset email and keeps the existing account. Email verification for cloud sync remains a separate step.
 - The owner chose to replace both the website host and cloud identity/sync service. Prepare the replacement in parallel on Cloudflare Workers Static Assets and Supabase. Test real email and two-device sync before moving public links. Users restore backups on the new origin rather than sharing credentials or assuming old cloud IDs survive.
+- Netlify is a prepared static-host fallback when the Cloudflare dashboard is unreachable. Its build requires the two public Supabase configuration values and publishes only the Vite output.

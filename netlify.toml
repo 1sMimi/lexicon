@@ -1,0 +1,6 @@
+[build]
+command = 'test -n "$VITE_SUPABASE_URL" && test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" && pnpm test && pnpm build'
+publish = "dist"
+
+[build.environment]
+NODE_VERSION = "24"
