@@ -1,4 +1,6 @@
 -- Apply to a user-owned Supabase project. Never expose service-role credentials.
+begin;
+
 create table if not exists public.lexicon_records (
   user_id uuid not null references auth.users(id) on delete cascade,
   table_name text not null check (table_name in ('words','wordbooks','wordbook_memberships','user_word_states','notes','review_logs','reading_positions','vocabulary_tests','settings')),
@@ -9,6 +11,7 @@ create table if not exists public.lexicon_records (
   primary key(user_id, table_name, record_id)
 );
 alter table public.lexicon_records enable row level security;
+drop policy if exists "Users read their own Lexicon rows" on public.lexicon_records;
 create policy "Users read their own Lexicon rows" on public.lexicon_records for select to authenticated using (auth.uid() = user_id);
 -- Writes go through CAS; callers cannot supply another user's identity.
 create or replace function public.lexicon_write(p_table text, p_id text, p_payload jsonb, p_version bigint)
@@ -31,3 +34,5 @@ revoke all on function public.lexicon_write(text,text,jsonb,bigint) from public;
 grant execute on function public.lexicon_write(text,text,jsonb,bigint) to authenticated;
 grant select on public.lexicon_records to authenticated;
 create index if not exists lexicon_records_incremental on public.lexicon_records(user_id,updated_at);
+
+commit;
