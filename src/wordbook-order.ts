@@ -9,5 +9,5 @@ export function orderWordbooks(books: Wordbook[]) {
 }
 
 export function currentWordbook(books: Wordbook[], id: unknown) {
-  return books.find(book=>book.id===id) ?? books.find(book=>book.id==='frequency') ?? books[0];
+  return books.find(book=>book.id===id) ?? books.find(book=>book.id==='toefl') ?? books.find(book=>book.id==='frequency') ?? books[0];
 }

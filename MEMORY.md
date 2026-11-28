@@ -29,3 +29,6 @@
 - Password recovery uses Firebase's password-reset email and keeps the existing account. Email verification for cloud sync remains a separate step.
 - The owner chose to replace both the website host and cloud identity/sync service. Prepare the replacement in parallel on Cloudflare Workers Static Assets and Supabase. Test real email and two-device sync before moving public links. Users restore backups on the new origin rather than sharing credentials or assuming old cloud IDs survive.
 - Netlify is a prepared static-host fallback when the Cloudflare dashboard is unreachable. Its build requires the two public Supabase configuration values and publishes only the Vite output.
+- The owner wants a permanent replacement website. Temporary hosting is not an acceptable deliverable. The new hosted Supabase project passed anonymous-denial checks; live mail and authenticated two-device sync still require verification.
+- The owner deployed the replacement at `https://lexicon-bbu5.netlify.app/`. Netlify Team Protection blocks guest access until the owner changes that setting.
+- The current wordbook defaults to TOEFL. An existing explicit wordbook selection takes precedence.
