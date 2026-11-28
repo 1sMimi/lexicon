@@ -109,3 +109,10 @@
 
 ## TOEFL default
 - TOEFL is the current wordbook fallback. Existing explicit selections still take priority, and High Frequency 3000 remains in the catalog. TypeScript, 27 tests and a Supabase-configured production build passed. Chromium at 390px and 1280px verified the default, the TOEFL study shortcut and preservation of a manually selected book across reload.
+- Local commit `d973df6` is ready. Two pushes timed out and the GitHub migration branch was still at `a24dd0b` when checked. The Netlify release of this change is pending.
+- Published the exact `d973df6` commit to the GitHub migration branch through the Git Database API without force. Netlify did not report a build status to GitHub during the first check, and unauthenticated site access still returns 401. The owner reported completing the Supabase redirect settings; console access timed out before independent confirmation.
+- The owner's Netlify Versions screenshot shows `d973df6` as **Live** and **Production deploy**, confirming the TOEFL build is deployed. Project visibility is a separate setting.
+
+## Public deployment and auth check
+- Netlify now returns HTTP 200 to guests. Fresh desktop and mobile Chromium sessions showed TOEFL and the hosted email sign-in, registration and password reset controls. Supabase Auth reported email confirmation enabled and GitHub enabled. Its public OAuth endpoint returned a GitHub redirect with the expected callback. Anonymous database access remained denied.
+- The live GitHub button was missing even though the provider was enabled. Added its non-secret switch to the Netlify production build and verified the build with 27 passing tests. Live email delivery, the completed GitHub return and dual-device sync remain unverified.

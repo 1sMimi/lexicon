@@ -4,3 +4,6 @@ publish = "dist"
 
 [build.environment]
 NODE_VERSION = "24"
+
+[context.production.environment]
+VITE_SUPABASE_GITHUB_ENABLED = "true"

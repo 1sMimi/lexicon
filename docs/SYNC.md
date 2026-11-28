@@ -4,7 +4,7 @@
 
 Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` at build time to show a hosted sign-in form without setup fields. Apply `supabase/migrations/001_sync.sql`, enable email confirmation, and set the new site's HTTPS root as the Site URL. Allow that origin's exact `/?auth=return` callback. Configure production SMTP and verify Gmail and 163.com confirmation and reset delivery before sharing the site. The default mail service only sends to approved project team addresses. Complete verification and recovery links in the same browser that started the request (PKCE).
 
-To offer GitHub, register a dedicated OAuth app so the existing Firebase callback stays usable, configure it only in the Supabase dashboard, and set `VITE_SUPABASE_GITHUB_ENABLED=true`. Verify authenticated users can only access their own records. Firebase accounts and passwords are independent from Supabase accounts. Users can create a new account and restore their Lexicon backup, as described in [DEPLOYMENT.md](DEPLOYMENT.md).
+To offer GitHub, register a dedicated OAuth app so the existing Firebase callback stays usable and configure it only in the Supabase dashboard. The Netlify production build sets `VITE_SUPABASE_GITHUB_ENABLED=true`. Set the same switch for other hosts or deploy contexts only after their provider is ready. Verify authenticated users can only access their own records. Firebase accounts and passwords are independent from Supabase accounts. Users can create a new account and restore their Lexicon backup, as described in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Legacy manual configuration
 
